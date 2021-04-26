@@ -1,10 +1,19 @@
 # Example script for EE302 students unfamiliar with python
 # Author: MAJ Niblick
 # Date: 25APR2021
-# Requires Python 3.8X or greater, numpy
+# Requires Python 3.8X or greater, numpy, sympy, and matplotlib
 
-# First are import statements which tell Python to use additional libraries.
-# Specifically, we will import math for basic math funcitons, and cmath for complex functions.
+# To begin with, you'll need to download Python 3.8 or greater. Be sure to include pip in your options while installing
+# Download an IDE - I like PyCharm, but Spyder is also popular
+# Once you've done that, you'll need to install numpy, sympy, and matplotlib libraries for your project
+# Some IDEs (such as pycharm) handle creating virtual environments so that each project is isolated from others,
+#   making library dependancies a non-issue. It is often easy to install the above libaries through such IDEs.
+# You could also use PIP in the terminal to install for your with the command like the following:
+#   py -m pip install [library name]
+
+# Import statements tell Python to use special libraries for this script (which we already installed to our environment)
+# Specifically, we will import math for basic math functions, and cmath for complex functions.
+# We will also import numpy for basic arrays, sympy for our equation solver, and matplotlib for plotting
 
 import math
 import cmath
@@ -22,6 +31,7 @@ def polar(magnitude, degrees):
     return cmath.rect(magnitude, math.radians(degrees))
 
 
+# The next two functions help us to conveniently format our answers for printing the console
 def print_polar(complex_number, variable_name='', units='', significant_digits=3):
     """Prints complex number as polar in scientific format in degrees with optional variable name and units"""
     if variable_name != '':
@@ -72,6 +82,7 @@ c1 = 82e-6
 z_c = complex(0, -1/(radians_per_second*c1))
 
 # To find the voltage across the resistor, we can voltage divider
+# Python follows normal order-of-operation conventions
 v_r1 = vs * r1 / (r1 + z_c)
 print_polar(v_r1, variable_name='v_r1', units='V')
 
@@ -81,6 +92,7 @@ print('Part 3: Solving Systems --------------------')
 # Say we have to solve a circuit with the following equations
 # eqn1 = (va-5)/r1 + (va-0)/r2 + (va-vb)/z_c == 0
 # eqn2 = (vb-va)/z_c + (vb-0)/r3
+vs = 5
 r1 = 100
 r2 = 200
 r3 = 150
@@ -90,7 +102,7 @@ z_c = complex(0, -1/(100*82e-6))
 va, vb = sym.symbols('va, vb')
 
 # Set up equations
-eqn1 = sym.Eq((va-5)/r1 + (va-0)/r2 + (va-vb)/z_c, 0)
+eqn1 = sym.Eq((va-vs)/r1 + (va-0)/r2 + (va-vb)/z_c, 0)
 eqn2 = sym.Eq((vb-va)/z_c + vb/r3, 0)
 
 # Solve equations ad save the solution as an object called "solution"
@@ -100,7 +112,7 @@ print(solution)
 # To call out a specific variable from solution, use solution[variable]
 print(solution[va])
 
-# Notice that solution is actually formatted as a string, not a complex number. To do use the solution
+# Notice that solution is actually formatted as a string, not a complex number. To use the solution
 #   as a complex number from this point on, we can convert it with the 'complex()' function
 va = complex(solution[va])
 print(va)
@@ -108,17 +120,31 @@ print_polar(va, variable_name='va', units='V')
 
 # Let's plot some results!
 print('Part 4: Plotting ------------------------')
-# We have a fixed circuit and want to change a load resistor to see how the power to the load changes
+# We have a series circuit of voltage source and two resistors, r1 and r_load
+# We want to change a load resistor to see how the power to the load changes
 # vs = 5V, R1 = 100 ohms - what happens to the power across RL as we adjust the resistance?
 vs = 5
 r1 = 100
+
+# Python needs discrete values to plot, so we'll use numpy to create a range of r_load values
+#   from 80 to 120 in steps of 1
+# Note that when using numpy arrays in scalar math, the operations are applied to each element in the array
 r_load = np.arange(80, 120, 1)
-p_load = (vs*r_load/(r1+r_load)) * (vs / (r1+r_load))
+p_load = (vs*r_load/(r1+r_load)) * (vs / (r1+r_load))  # P = VI... terms are rearranged
+
+# Create a "figure" object and an "axis" object to put on the figure
 fig, ax = plt.subplots()
+
+# Put data onto our axis object
 ax.plot(r_load, p_load)
+
+# Set some properties for our axis object, such as labels
 ax.set_xlabel('r_load (ohms)')
 ax.set_ylabel('p_load (watts)')
 ax.set_title('Power Across Load Resistor')
 ax.set_xlim(90, 110)  # Sets limits on x-axis
+
+# Show on the screen
 plt.show()
 
+# Congratulations!
