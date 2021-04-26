@@ -10,6 +10,7 @@ import math
 import cmath
 import numpy as np
 import sympy as sym
+from matplotlib import pyplot as plt
 
 
 # Next we define some custom helper functions
@@ -107,3 +108,17 @@ print_polar(va, variable_name='va', units='V')
 
 # Let's plot some results!
 print('Part 4: Plotting ------------------------')
+# We have a fixed circuit and want to change a load resistor to see how the power to the load changes
+# vs = 5V, R1 = 100 ohms - what happens to the power across RL as we adjust the resistance?
+vs = 5
+r1 = 100
+r_load = np.arange(80, 120, 1)
+p_load = (vs*r_load/(r1+r_load)) * (vs / (r1+r_load))
+fig, ax = plt.subplots()
+ax.plot(r_load, p_load)
+ax.set_xlabel('r_load (ohms)')
+ax.set_ylabel('p_load (watts)')
+ax.set_title('Power Across Load Resistor')
+ax.set_xlim(90, 110)  # Sets limits on x-axis
+plt.show()
+
