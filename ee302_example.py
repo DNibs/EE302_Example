@@ -137,18 +137,23 @@ r1 = 100
 # Note that when using numpy arrays in scalar math, the operations are applied to each element in the array
 r_load = np.arange(80, 120, 1)
 p_load = (vs*r_load/(r1+r_load)) * (vs / (r1+r_load))  # P = VI... terms are rearranged
+p_r1 = r1*(vs/(r1+r_load))**2
 
 # Create a "figure" object and an "axis" object to put on the figure
 fig, ax = plt.subplots()
 
 # Put data onto the x and y axis within our axis object
+# You can add multiple series of data to the same axis object
 ax.plot(r_load, p_load)
+ax.plot(r_load, p_r1)
 
 # Set some properties for our axis object, such as labels
-ax.set_xlabel('r_load (ohms)')
-ax.set_ylabel('p_load (watts)')
-ax.set_title('Power Across Load Resistor')
-ax.set_xlim(90, 110)  # Sets limits on x-axis
+ax.set_xlabel('$R_L$ (ohms)')  # Using dollar signs in matplotlib gives the formatting a "math" style similar to LaTex
+ax.set_ylabel('Power (watts)')
+ax.set_title('Power Across Resistors in Series')
+ax.legend(['$R_L$', '$R1$'])
+# ax.set_xlim(90, 110)  # Sets limits on x-axis
+ax.set_ylim(0.06, 0.065)  # Sets limits on y-axis
 
 # Show on the screen
 plt.show()
