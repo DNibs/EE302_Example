@@ -7,13 +7,13 @@
 # Download an IDE - I like PyCharm, but Spyder is also popular
 # Once you've done that, you'll need to install numpy, sympy, and matplotlib libraries for your project
 # Some IDEs (such as pycharm) handle creating virtual environments so that each project is isolated from others,
-#   making library dependancies a non-issue. It is often easy to install the above libaries through such IDEs.
-# You could also use PIP in the terminal to install for your with the command like the following:
+#   making library dependencies a non-issue. It is often easy to install the above libraries through such IDEs.
+# You could also use PIP in the terminal to install with the terminal like the following:
 #   py -m pip install [library name]
 
 # Import statements tell Python to use special libraries for this script (which we already installed to our environment)
 # Specifically, we will import math for basic math functions, and cmath for complex functions.
-# We will also import numpy for basic arrays, sympy for our equation solver, and matplotlib for plotting
+# We will also import numpy for arrays, sympy for our equation solver, and matplotlib for plotting
 
 import math
 import cmath
@@ -40,6 +40,12 @@ def print_polar(complex_number, variable_name='', units='', significant_digits=3
         var_name = ''
     mag = abs(complex_number)
     angle = math.degrees(cmath.polar(complex_number)[1])
+    # python provides numerous options for modifying strings. Since 3.8, you can directly insert variables
+    #   in a string using the f' ... {variable name} ...' option
+    # Additionally, numeric variables can be formatted a certain way in a string by using the following way:
+    #   variable:digits.digitsf, where digits is an integer to specify how many digits you want to display either
+    #   before or after the period, and f stand for float (real number), or e for scientific exponential, or other
+    #   numeric formatting styles
     print(f'{var_name}{mag:.{significant_digits-1}e} angle {angle:.{significant_digits-1}e} deg {units}')
 
 
@@ -58,9 +64,10 @@ print('Part 1: Initializing and Printing Complex Numbers -----------------')
 # "complex" function is how you input a complex number. The first input is real, the second is imaginary
 vt = complex(5, 0)
 
-# Here are a few ways to print the complex variable. First is default print statement.
-# The other three use our custom functions above, with the last also using the optional arguments.
+# Here are a few ways to print the complex variable. First is default print statement. second uses string formatting,
+# The other three use our custom functions above, with the last including the optional arguments.
 print(vt)
+print(f'vt = {vt} V')
 print_cartesian(vt)
 print_polar(vt)
 print_polar(vt, variable_name='vt', units='V', significant_digits=5)
@@ -81,15 +88,14 @@ r1 = 100
 c1 = 82e-6
 z_c = complex(0, -1/(radians_per_second*c1))
 
-# To find the voltage across the resistor, we can voltage divider
+# To find the voltage across the resistor, we can use voltage divider
 # Python follows normal order-of-operation conventions
 v_r1 = vs * r1 / (r1 + z_c)
 print_polar(v_r1, variable_name='v_r1', units='V')
 
 print('Part 3: Solving Systems --------------------')
-# To solve a system of equations for nodal or mesh analysis, we can use sympy's solve function
-# Set up your equations as a matrix multiplication, like the following:
-# Say we have to solve a circuit with the following equations
+# To solve a system of equations for nodal voltage analysis or mesh analysis, we can use sympy's solve function
+# Say we have to solve a circuit with the following equations:
 # eqn1 = (va-5)/r1 + (va-0)/r2 + (va-vb)/z_c == 0
 # eqn2 = (vb-va)/z_c + (vb-0)/r3
 vs = 5
@@ -112,8 +118,8 @@ print(solution)
 # To call out a specific variable from solution, use solution[variable]
 print(solution[va])
 
-# Notice that solution is actually formatted as a string, not a complex number. To use the solution
-#   as a complex number from this point on, we can convert it with the 'complex()' function
+# Notice that solution is a string, not a complex number. We can't us it in any follow on math! To fix that,
+#   we can convert the string to a complex number with the 'complex()' function
 va = complex(solution[va])
 print(va)
 print_polar(va, variable_name='va', units='V')
@@ -135,7 +141,7 @@ p_load = (vs*r_load/(r1+r_load)) * (vs / (r1+r_load))  # P = VI... terms are rea
 # Create a "figure" object and an "axis" object to put on the figure
 fig, ax = plt.subplots()
 
-# Put data onto our axis object
+# Put data onto the x and y axis within our axis object
 ax.plot(r_load, p_load)
 
 # Set some properties for our axis object, such as labels
