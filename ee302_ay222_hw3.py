@@ -49,10 +49,13 @@ r160 = 160.
 r200 = 200.
 r130 = 130.
 r82 = 82.
-z_c = complex(0, -1 / (omega * 39e-6))
+z_c = complex(0, -1 / (omega * 3.9e-6))
 z_l12 = complex(0, omega * 12e-3)
 z_l47 = complex(0, omega * 4.7e-3)
 
+print_cartesian(z_c, 'z_c')
+print_cartesian(z_l12, 'z_l12')
+print_cartesian(z_l47, 'z_l47')
 # Declare variables to solve
 va, vb, vc = sym.symbols('va, vb, vc')
 
