@@ -2,7 +2,7 @@ import math
 import sympy as sym
 import numpy as np
 import matplotlib.pyplot as plt
-import matplotlib.lines as lines
+import matplotlib.animation as animation
 from ee302_example import print_polar
 from ee302_example import print_cartesian
 from ee302_example import polar
@@ -16,7 +16,7 @@ period = 1./freq
 omega = 2. * freq * np.pi
 left_limit = -.25*period
 right_limit = 1.5*period
-sampling = period / 50.
+sampling = period / 100.
 x = np.arange(left_limit, right_limit, sampling)
 voltage = voltage_amplitude * np.sin(omega*x+np.pi/2.)
 current = current_amplitude * np.sin(omega*x+np.pi/2. - current_phase)
@@ -26,9 +26,11 @@ minor_ticks = np.arange(left_limit, right_limit, period / 20.)
 
 fig = plt.figure()
 ax = fig.add_subplot()
-ax.plot(x, voltage, label='v(t) [V]')
-ax.plot(x, current, label='i(t) [A]')
-# ax.plot(x, power, label='p(t) [W]')
+linev, = ax.plot(x, voltage, label='v(t) [V]')
+linei, = ax.plot(x, current, label='i(t) [A]')
+# COMMENT OUT LINEP IF YOU DON'T WANT p(t) displayed
+linep, = ax.plot(x, power, label='p(t) [W]')
+
 ax.set_title('Voltage and Current through Load')
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Amplitude')
@@ -38,6 +40,23 @@ ax.axvline(0, color='k')
 ax.axhline(0, color='k')
 ax.set_xticks(minor_ticks, minor=True)
 ax.legend()
+
+
+# COMMENT BETWEEN DASHES IF YOU DON'T WANT ANIMATION --------------------
+def animate(i):
+    new_current = current_amplitude * np.sin(omega*x+np.pi/2. - i*np.pi/40.)
+    linev.set_ydata(voltage_amplitude * np.sin(omega*x+np.pi/2.))
+    linei.set_ydata(new_current)
+    linep.set_ydata(abs(voltage * new_current))
+    return [linev, linei, linep]
+
+
+ani = animation.FuncAnimation(
+    fig, animate, interval=80, blit=True, save_count=80)
+
+ani.save('fig_over_time.gif')
+# ------------------------------------------------------------
+
 
 plt.show()
 
