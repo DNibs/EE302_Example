@@ -20,6 +20,7 @@ sampling = period / 50.
 x = np.arange(left_limit, right_limit, sampling)
 voltage = voltage_amplitude * np.sin(omega*x+np.pi/2.)
 current = current_amplitude * np.sin(omega*x+np.pi/2. - current_phase)
+power = abs(voltage * current)
 
 minor_ticks = np.arange(left_limit, right_limit, period / 20.)
 
@@ -27,6 +28,7 @@ fig = plt.figure()
 ax = fig.add_subplot()
 ax.plot(x, voltage, label='v(t) [V]')
 ax.plot(x, current, label='i(t) [A]')
+# ax.plot(x, power, label='p(t) [W]')
 ax.set_title('Voltage and Current through Load')
 ax.set_xlabel('Time (s)')
 ax.set_ylabel('Amplitude')
@@ -37,7 +39,7 @@ ax.axhline(0, color='k')
 ax.set_xticks(minor_ticks, minor=True)
 ax.legend()
 
-# plt.show()
+plt.show()
 
 print('Problem 1')
 print(' V = 6cos(2pi50w), I=2cos(2pi50w - 36degrees)')
